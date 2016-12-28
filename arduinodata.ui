@@ -19,7 +19,7 @@
      <item>
       <widget class="QTabWidget" name="tWPlot">
        <property name="currentIndex">
-        <number>3</number>
+        <number>2</number>
        </property>
        <widget class="QWidget" name="tabSettings">
         <attribute name="title">
@@ -212,7 +212,11 @@
         </attribute>
         <layout class="QGridLayout" name="gridLayout_3">
          <item row="0" column="0">
-          <widget class="QTextEdit" name="tEPlainData"/>
+          <widget class="QPlainTextEdit" name="tEPlainData">
+           <property name="plainText">
+            <string notr="true"/>
+           </property>
+          </widget>
          </item>
         </layout>
        </widget>

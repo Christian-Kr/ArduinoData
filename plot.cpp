@@ -7,7 +7,7 @@
 Plot::Plot(QWidget *parent) :
     QChartView(parent),
     chart(new QChart()),
-    series(new QList<QLineSeries*>()),
+    series(new QList<QSplineSeries*>()),
     valueAxisX(new QValueAxis()),
     valueAxisY(new QValueAxis()) {
 }
@@ -46,9 +46,10 @@ void Plot::initChartView() {
 
 uint Plot::createLineSeries(uint num) {
     while (num > 0) {
-        QLineSeries *lineSeries = new QLineSeries(chart);
+        QSplineSeries *lineSeries = new QSplineSeries(chart);
         lineSeries->setUseOpenGL(true);
         series->append(lineSeries);
+        lineSeries->setName(tr("Signal ") + QString::number(series->size()));
         chart->addSeries(lineSeries);
         num--;
     }
@@ -93,12 +94,18 @@ void Plot::parseAppendData(QByteArray data) {
             valueAxisX->setRange(x-rangeX, x);
         }
 
-        if (dataLine.toFloat() > highestValue)
-            highestValue = dataLine.toFloat();
-        if (dataLine.toFloat() < lowestValue)
-            lowestValue = dataLine.toFloat();
+        // on the first data set minimum and maximum value
+        if (x < 1) {
+            highestValue = dataLine.toFloat()+10;
+            lowestValue = dataLine.toFloat()-10;
+        }
 
-        valueAxisY->setRange(lowestValue-10, highestValue+10);
+        if (dataLine.toFloat() > highestValue-10)
+            highestValue = dataLine.toFloat()+10;
+        if (dataLine.toFloat() < lowestValue+10)
+            lowestValue = dataLine.toFloat()-10;
+
+        valueAxisY->setRange(lowestValue, highestValue);
 
         series->at(0)->append(QPointF(x, dataLine.toFloat()));
     }

@@ -2,7 +2,7 @@
 #define PLOT_H
 
 #include <QtCharts/QChartView>
-#include <QtCharts/QLineSeries>
+#include <QtCharts/QSplineSeries>
 #include <QtCharts/QChart>
 #include <QtCharts/QValueAxis>
 
@@ -27,7 +27,7 @@ public:
      * @brief allLineSeries Return all the created line series objects.
      * @return A pointer to all objects. (Deleted by this)
      */
-    inline QList<QLineSeries*>* allLineSeries() { return series; }
+    inline QList<QSplineSeries*>* allLineSeries() { return series; }
 
     /**
      * @brief oneLineSeries Return one line series object.
@@ -74,7 +74,7 @@ public slots:
 
 private:
     QChart *chart;
-    QList<QLineSeries*> *series;
+    QList<QSplineSeries*> *series;
     QValueAxis *valueAxisX;
     QValueAxis *valueAxisY;
 
