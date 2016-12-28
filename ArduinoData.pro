@@ -4,7 +4,7 @@
 #
 #-------------------------------------------------
 
-QT       += core gui serialport
+QT       += core gui serialport charts
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -26,8 +26,10 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += main.cpp\
-        arduinodata.cpp
+        arduinodata.cpp \
+    plot.cpp
 
-HEADERS  += arduinodata.h
+HEADERS  += arduinodata.h \
+    plot.h
 
 FORMS    += arduinodata.ui

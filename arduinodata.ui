@@ -17,9 +17,9 @@
    <item row="0" column="0">
     <layout class="QVBoxLayout" name="verticalLayout">
      <item>
-      <widget class="QTabWidget" name="tabWidget">
+      <widget class="QTabWidget" name="tWPlot">
        <property name="currentIndex">
-        <number>0</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tabSettings">
         <attribute name="title">
@@ -216,6 +216,16 @@
          </item>
         </layout>
        </widget>
+       <widget class="QWidget" name="tPlot">
+        <attribute name="title">
+         <string>Plot</string>
+        </attribute>
+        <layout class="QGridLayout" name="gridLayout_6">
+         <item row="0" column="0">
+          <widget class="Plot" name="graphicsView"/>
+         </item>
+        </layout>
+       </widget>
       </widget>
      </item>
      <item>
@@ -254,6 +264,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>Plot</class>
+   <extends>QGraphicsView</extends>
+   <header>plot.h</header>
+  </customwidget>
+ </customwidgets>
  <resources/>
  <connections>
   <connection>

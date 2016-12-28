@@ -10,8 +10,7 @@ namespace Ui {
 class ArduinoData;
 }
 
-class ArduinoData : public QWidget
-{
+class ArduinoData : public QWidget {
     Q_OBJECT
 
 public:
