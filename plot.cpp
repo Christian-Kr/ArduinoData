@@ -23,13 +23,13 @@ void Plot::initChartView() {
     createLineSeries(1);
 
     // Number of values displayed on the x axis
-    rangeX = 1000;
-    valueAxisX->setRange(1, rangeX);
+    rangeX = 500;
+    valueAxisX->setRange(0, rangeX);
 
     // Set the default values for both axis
     valueAxisX->setTickCount(10);
     valueAxisX->setTitleText(tr("Timestep []"));
-    valueAxisY->setRange(1, 100);
+    valueAxisY->setRange(0, 100);
     valueAxisY->setTickCount(10);
 
     // Set chart options
@@ -96,17 +96,18 @@ void Plot::parseAppendData(QByteArray data) {
 
         // on the first data set minimum and maximum value
         if (x < 1) {
-            highestValue = dataLine.toFloat()+10;
-            lowestValue = dataLine.toFloat()-10;
+            highestValue = dataLine.toFloat()+1;
+            lowestValue = dataLine.toFloat()-1;
         }
 
-        if (dataLine.toFloat() > highestValue-10)
-            highestValue = dataLine.toFloat()+10;
-        if (dataLine.toFloat() < lowestValue+10)
-            lowestValue = dataLine.toFloat()-10;
+        if (dataLine.toFloat() > highestValue-1)
+            highestValue = dataLine.toFloat()+1;
+        if (dataLine.toFloat() < lowestValue+1)
+            lowestValue = dataLine.toFloat()-1;
 
         valueAxisY->setRange(lowestValue, highestValue);
 
         series->at(0)->append(QPointF(x, dataLine.toFloat()));
+        qDebug() << dataLine << " " << dataLine.toFloat();
     }
 }
