@@ -64,18 +64,12 @@ void Plot::deleteLineSeries() {
 }
 
 void Plot::parseAppendData(QByteArray data) {
-    // The data we get need some format otherwise parsing will fail
-    if (!data.endsWith('\n')) {
-        qDebug() << "Error: data doesn't end with a newline char";
-        return;
-    }
-
     // Remove the last newline char, as now we don't need it anymore
     data.remove(data.size()-1, 1);
 
     /* Finding a space or \r indicates a new line series, so get a chunk of
     data and search for this chars. */
-    QList<QByteArray> dataLines = data.split('\n');
+    QList<QByteArray> dataLines = data.split(':');
 
     for (int i = 0; i < dataLines.size(); i++) {
         QByteArray dataLine = dataLines.at(i).simplified();

@@ -41,7 +41,7 @@ private:
     void addLogInfo(const QString &info);
 
     // Export buffer to a file
-    void exportBuffer();
+    void exportBuffer(QByteArray tmp);
 
     // Update list of all available devices
     void updateAvailableDevices();

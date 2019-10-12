@@ -152,31 +152,27 @@ void ArduinoData::readData() {
 
     // Plot and/or export only data that ends with a newline char
 
-    /* Test wheater there is newline char or not, otherwise there is no need to
-    go on. */
-    if (!serialBuffer->contains('\n'))
+    // Break if there is no : in bytes. This is protocoll specific. After
+    // every value, a : occurs.
+    if (!serialBuffer->contains(':'))
         return;
 
-    // When the buffer starts with a newline char, remove it
-    while (serialBuffer->startsWith('\n'))
-        serialBuffer->remove(0, 1);
-
-    // Get the position of the last newline char
-    int pos = -1;
-    for (int i = serialBuffer->size()-1; i > -1; i--) {
-        if (serialBuffer->at(i) == '\n') {
-            pos = i;
-            break;
-        }
-    }
+    // Get the first : char and the value before
+    int pos = serialBuffer->indexOf(':');
+    if (pos == -1)
+        return;
+    QByteArray tmp = serialBuffer->left(pos);
+    qDebug() << "tmp: " << tmp;
+    serialBuffer->remove(0, pos);
+    qDebug() << "serialBuffer" << serialBuffer->data();
 
     // Write data to export file
-    if ((pos > -1) && (ui->gBExport->isChecked()))
-        exportBuffer();
+    if (ui->gBExport->isChecked())
+        exportBuffer(tmp);
 
     // Plot the data
     if (pos > -1)
-        ui->graphicsView->parseAppendData(serialBuffer->mid(0, pos+1));
+        ui->graphicsView->parseAppendData(tmp);
 
     // Remove the data that have been exported and plotted
     if (pos > -1)
@@ -197,12 +193,12 @@ void ArduinoData::filePath() {
     ui->lEFileName->setText(fn);
 }
 
-void ArduinoData::exportBuffer() {
+void ArduinoData::exportBuffer(QByteArray tmp) {
     // Check file object
-    if (!exportFile->isOpen())
+    if (!exportFile->isOpen() || tmp.isEmpty())
         return;
 
     QTextStream out(exportFile);
     out << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
-        << serialBuffer->data();
+        << ";" << QString(tmp.data()).replace(".", ",") << "\n";
 }
