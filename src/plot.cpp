@@ -1,7 +1,7 @@
-#include "plot.h"
+#include <plot.h>
 
-#include <QValueAxis>
-#include <QDebug>
+#include <QtCharts/QValueAxis>
+#include <QtCore/QtDebug>
 #include <QApplication>
 
 Plot::Plot(QWidget *parent) :

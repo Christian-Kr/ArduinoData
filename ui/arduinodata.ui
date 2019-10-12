@@ -19,7 +19,7 @@
      <item>
       <widget class="QTabWidget" name="tWPlot">
        <property name="currentIndex">
-        <number>2</number>
+        <number>3</number>
        </property>
        <widget class="QWidget" name="tabSettings">
         <attribute name="title">
@@ -272,7 +272,7 @@
   <customwidget>
    <class>Plot</class>
    <extends>QGraphicsView</extends>
-   <header>plot.h</header>
+   <header location="global">plot.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

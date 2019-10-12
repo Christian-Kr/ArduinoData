@@ -203,5 +203,6 @@ void ArduinoData::exportBuffer() {
         return;
 
     QTextStream out(exportFile);
-    out << serialBuffer->data();
+    out << QDateTime::currentDateTime().toString("dd.MM.yyyy hh:mm:ss")
+        << serialBuffer->data();
 }
