@@ -33,6 +33,8 @@ public slots:
     // Open a file to save
     void filePath();
 
+    void serialerror(QSerialPort::SerialPortError error);
+
 private:
     // Update the text on the start/stop button
     void updateStartStopButton();

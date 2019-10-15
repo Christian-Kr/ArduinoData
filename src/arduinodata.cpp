@@ -9,6 +9,7 @@
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
+#include <QTimer>
 
 ArduinoData::ArduinoData(QWidget *parent) :
     QWidget(parent),
@@ -26,7 +27,6 @@ ArduinoData::ArduinoData(QWidget *parent) :
 
     // Serial port
     serialPortOpen = false;
-    connect(serialPort, SIGNAL(readyRead()), this, SLOT(readData()));
 
     // Combo box for baud rates
     baudRates->insert(1200, QSerialPort::Baud1200);
@@ -72,6 +72,11 @@ void ArduinoData::updateAvailableDevices() {
         ui->cBDevice->addItem(port.systemLocation());
 }
 
+void ArduinoData::serialerror(QSerialPort::SerialPortError error)
+{
+    qDebug() << "Error: " << serialPort->errorString() << error;
+}
+
 void ArduinoData::startStop() {
     QString info;
     info += tr("----------\n");
@@ -79,7 +84,7 @@ void ArduinoData::startStop() {
 
     if (serialPortOpen == true) {
         // If port is already open, close it...
-        serialPort->close();
+        //serialPort->close();
 
         serialPortOpen = false;
         info += tr("Verbindung gestoppt!");
@@ -111,7 +116,10 @@ void ArduinoData::startStop() {
         }
 
         // Open the port and check whether an error occurs or not
-        if (!serialPort->open(QIODevice::ReadWrite)) {
+        serialPort->disconnect(this);
+        connect(serialPort, &QSerialPort::readyRead, this, &ArduinoData::readData);
+        connect(serialPort, &QSerialPort::errorOccurred, this, &ArduinoData::serialerror);
+        if (!serialPort->open(QIODevice::ReadOnly)) {
             info += tr("Status:\t\tFehler! - ") +
                     serialPort->errorString();
 
@@ -128,6 +136,12 @@ void ArduinoData::startStop() {
 
     // Add log info
     addLogInfo(info);
+
+
+    serialPort->waitForReadyRead(-1);
+    //QTimer * timer = new QTimer(this);
+    //connect(timer, &QTimer::timeout, this, &ArduinoData::readData);
+    //timer->start(500);
 }
 
 void ArduinoData::updateBaudRate(QString key) {
@@ -142,8 +156,10 @@ void ArduinoData::updateStartStopButton() {
 }
 
 void ArduinoData::readData() {
-    QByteArray data = serialPort->readAll();
+    QCoreApplication::processEvents();
 
+    QByteArray data = serialPort->readAll();
+    qDebug() << data;
     // Add data to plain tab
     ui->tEPlainData->moveCursor(QTextCursor::EndOfLine);
     ui->tEPlainData->insertPlainText(data);
