@@ -23,13 +23,13 @@ void Plot::initChartView() {
     createLineSeries(1);
 
     // Number of values displayed on the x axis
-    rangeX = 500;
+    rangeX = 100;
     valueAxisX->setRange(0, rangeX);
 
     // Set the default values for both axis
     valueAxisX->setTickCount(10);
     valueAxisX->setTitleText(tr("Timestep []"));
-    valueAxisY->setRange(0, 100);
+    valueAxisY->setRange(0, 5);
     valueAxisY->setTickCount(10);
 
     // Set chart options
@@ -67,7 +67,7 @@ void Plot::parseAppendData(QByteArray data) {
     // Remove the last newline char, as now we don't need it anymore
     data.remove(data.size()-1, 1);
 
-    /* Finding a space or \r indicates a new line series, so get a chunk of
+    /* Finding a : indicates a new line series, so get a chunk of
     data and search for this chars. */
     QList<QByteArray> dataLines = data.split(':');
 
@@ -88,20 +88,8 @@ void Plot::parseAppendData(QByteArray data) {
             valueAxisX->setRange(x-rangeX, x);
         }
 
-        // on the first data set minimum and maximum value
-        if (x < 1) {
-            highestValue = dataLine.toFloat()+1;
-            lowestValue = dataLine.toFloat()-1;
-        }
-
-        if (dataLine.toFloat() > highestValue-1)
-            highestValue = dataLine.toFloat()+1;
-        if (dataLine.toFloat() < lowestValue+1)
-            lowestValue = dataLine.toFloat()-1;
-
-        valueAxisY->setRange(lowestValue, highestValue);
+        valueAxisY->setRange(0, 5);
 
         series->at(0)->append(QPointF(x, dataLine.toFloat()));
-        qDebug() << dataLine << " " << dataLine.toFloat();
     }
 }

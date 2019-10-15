@@ -84,7 +84,7 @@ void ArduinoData::startStop() {
 
     if (serialPortOpen == true) {
         // If port is already open, close it...
-        //serialPort->close();
+       serialPort->close();
 
         serialPortOpen = false;
         info += tr("Verbindung gestoppt!");
@@ -95,6 +95,14 @@ void ArduinoData::startStop() {
 
         // Enable the settings tab
         ui->tabSettings->setEnabled(true);
+
+        // Update the text on the start/stop button
+        updateStartStopButton();
+
+        // Add log info
+        addLogInfo(info);
+
+        return;
     } else {
         // Disable the settings tab
         ui->tabSettings->setEnabled(false);
@@ -139,9 +147,6 @@ void ArduinoData::startStop() {
 
 
     serialPort->waitForReadyRead(-1);
-    //QTimer * timer = new QTimer(this);
-    //connect(timer, &QTimer::timeout, this, &ArduinoData::readData);
-    //timer->start(500);
 }
 
 void ArduinoData::updateBaudRate(QString key) {
@@ -159,7 +164,6 @@ void ArduinoData::readData() {
     QCoreApplication::processEvents();
 
     QByteArray data = serialPort->readAll();
-    qDebug() << data;
     // Add data to plain tab
     ui->tEPlainData->moveCursor(QTextCursor::EndOfLine);
     ui->tEPlainData->insertPlainText(data);
@@ -170,17 +174,15 @@ void ArduinoData::readData() {
 
     // Break if there is no : in bytes. This is protocoll specific. After
     // every value, a : occurs.
-    if (!serialBuffer->contains(':'))
+    if (!serialBuffer->contains(';'))
         return;
 
     // Get the first : char and the value before
-    int pos = serialBuffer->indexOf(':');
+    int pos = serialBuffer->indexOf(';');
     if (pos == -1)
         return;
     QByteArray tmp = serialBuffer->left(pos);
-    qDebug() << "tmp: " << tmp;
     serialBuffer->remove(0, pos);
-    qDebug() << "serialBuffer" << serialBuffer->data();
 
     // Write data to export file
     if (ui->gBExport->isChecked())
